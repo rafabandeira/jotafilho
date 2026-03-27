@@ -1868,6 +1868,7 @@ section {
 .hero {
   overflow-x: hidden;
   padding: 0;
+  position: relative;
 }
 
 .hero .carousel {

@@ -1,0 +1,20 @@
+{
+    "version": 2,
+    "settings": {
+        "appearanceTools": true,
+        "color": {
+            "palette": [
+                {
+                    "slug": "primary",
+                    "color": "#feb900",
+                    "name": "Amarelo"
+                },
+                {
+                    "slug": "dark",
+                    "color": "#00215e",
+                    "name": "Azul Escuro"
+                }
+            ]
+        }
+    }
+}
