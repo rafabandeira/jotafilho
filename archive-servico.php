@@ -1,93 +1,105 @@
 <?php
 /**
- * The template for displaying archive pages for 'servico' CPT.
- *
- * @link https://developer.wordpress.org/themes/basics/template-hierarchy/
- *
- * @package jotafilho
+ * Template para Archive de Serviços - J Filho Engenharia
+ * Ajustado para alinhamento no topo e imagens quadradas.
  */
 
 get_header(); ?>
 
 <main id="main">
 
-    <!-- ======= Breadcrumbs ======= -->
-    <div class="breadcrumbs d-flex align-items-center" style="background-image: url('<?php echo get_template_directory_uri(); ?>/assets/img/hero-carousel/hero-carousel-1.jpg');">
+    <div class="breadcrumbs d-flex align-items-center" style="background-image: url('<?php echo esc_url(get_template_directory_uri()); ?>/assets/img/hero-carousel/hero-carousel-1.jpg');">
         <div class="container position-relative d-flex flex-column align-items-center">
-            <h2>Serviços</h2>
+            <h2><?php echo esc_html__('Serviços', 'jotafilho'); ?></h2>
             <ol>
-                <li><a href="<?php echo home_url(); ?>">Home</a></li>
-                <li>Serviços</li>
+                <li><a href="<?php echo esc_url(home_url('/')); ?>">Home</a></li>
+                <li><?php echo esc_html__('Serviços', 'jotafilho'); ?></li>
             </ol>
         </div>
-    </div><!-- End Breadcrumbs -->
+    </div><?php
+    // Query manual para garantir a entrega dos dados
+    $args = array(
+        'post_type'      => 'servico',
+        'posts_per_page' => -1,
+        'post_status'    => 'publish',
+        'orderby'        => 'menu_order',
+        'order'          => 'ASC'
+    );
+    
+    $query_servicos = new WP_Query($args);
 
-    <?php
-    $count = 0;
-    if (have_posts()) :
-        while (have_posts()) : the_post();
+    if ($query_servicos->have_posts()) :
+        $count = 0;
+        while ($query_servicos->have_posts()) : $query_servicos->the_post();
             $count++;
             $is_even = ($count % 2 == 0);
             $image_url = get_the_post_thumbnail_url(get_the_ID(), 'full');
+            
+            // Fallback caso não tenha imagem de destaque
             if (!$image_url) {
-                $image_url = get_template_directory_uri() . '/assets/img/obras/obra1_00034.jpg'; // Fallback
+                $image_url = get_template_directory_uri() . '/assets/img/obras/obra1_00034.jpg';
             }
     ?>
 
-            <!-- ======= Alt Services Section ======= -->
-            <section id="servico-<?php the_ID(); ?>" class="alt-services <?php echo $is_even ? 'section-bg' : ''; ?>">
-                <div class="container">
+        <section id="servico-<?php the_ID(); ?>" class="alt-services <?php echo $is_even ? 'section-bg' : ''; ?>" style="padding: 100px 0; opacity: 1 !important; visibility: visible !important;">
+            <div class="container">
 
-                    <div class="row justify-content-around gy-4">
+                <div class="row justify-content-around gy-5">
+                    
+                    <?php if ($is_even) : ?>
+                        <div class="col-lg-6">
+                            <img src="<?php echo esc_url($image_url); ?>" alt="<?php the_title_attribute(); ?>" class="img-fluid rounded shadow" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; display: block !important;">
+                        </div>
+                    <?php endif; ?>
+
+                    <div class="col-lg-5 d-flex flex-column justify-content-start pt-2">
+                        <h3 class="mb-3" style="color: var(--color-secondary); font-weight: 700;"><?php the_title(); ?></h3>
                         
-                        <?php if ($is_even) : ?>
-                            <!-- Image on Left for even items -->
-                            <div class="col-lg-6 img-bg" style="background-image: url(<?php echo $image_url; ?>);"></div>
-                        <?php endif; ?>
-
-                        <div class="col-lg-5 d-flex flex-column justify-content-center">
-                            <h3><?php the_title(); ?></h3>
+                        <div class="service-content mb-4" style="line-height: 1.6;">
                             <?php the_content(); ?>
-
-                            <?php
-                            // Se estiver usando ACF para sub-itens
-                            if (function_exists('have_rows') && have_rows('itens_do_servico')) :
-                                while (have_rows('itens_do_servico')) : the_row();
-                                    $item_titulo = get_sub_field('item_titulo');
-                                    $item_desc = get_sub_field('item_descricao');
-                                    $item_icone = get_sub_field('item_icone');
-                            ?>
-                                    <div class="icon-box d-flex position-relative">
-                                        <i class="<?php echo $item_icone ? esc_attr($item_icone) : 'bi bi-patch-check'; ?> flex-shrink-0"></i>
-                                        <div>
-                                            <h4><a href="" class="stretched-link"><?php echo esc_html($item_titulo); ?></a></h4>
-                                            <p><?php echo esc_html($item_desc); ?></p>
-                                        </div>
-                                    </div><!-- End Icon Box -->
-                            <?php
-                                endwhile;
-                            endif;
-                            ?>
                         </div>
 
-                        <?php if (!$is_even) : ?>
-                            <!-- Image on Right for odd items -->
-                            <div class="col-lg-6 img-bg" style="background-image: url(<?php echo $image_url; ?>);"></div>
-                        <?php endif; ?>
-
+                        <?php
+                        // Integração com ACF Repeater 'itens_do_servico'
+                        if (function_exists('have_rows') && have_rows('itens_do_servico')) :
+                            while (have_rows('itens_do_servico')) : the_row();
+                                $item_titulo = get_sub_field('item_titulo');
+                                $item_desc   = get_sub_field('item_descricao');
+                                $item_icone  = get_sub_field('item_icone');
+                        ?>
+                                <div class="icon-box d-flex position-relative mb-4">
+                                    <i class="<?php echo $item_icone ? esc_attr($item_icone) : 'bi bi-patch-check'; ?> flex-shrink-0 me-3" style="font-size: 28px; color: var(--color-primary);"></i>
+                                    <div>
+                                        <h4 style="font-size: 1.2rem; font-weight: 600; margin-bottom: 5px;"><?php echo esc_html($item_titulo); ?></h4>
+                                        <p style="font-size: 0.95rem; color: #666;"><?php echo esc_html($item_desc); ?></p>
+                                    </div>
+                                </div>
+                        <?php
+                            endwhile;
+                        endif;
+                        ?>
                     </div>
 
+                    <?php if (!$is_even) : ?>
+                        <div class="col-lg-6">
+                            <img src="<?php echo esc_url($image_url); ?>" alt="<?php the_title_attribute(); ?>" class="img-fluid rounded shadow" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; display: block !important;">
+                        </div>
+                    <?php endif; ?>
+
                 </div>
-            </section><!-- End Alt Services Section -->
+
+            </div>
+        </section>
 
     <?php
         endwhile;
-        the_posts_navigation();
+        wp_reset_postdata();
     else :
-        echo '<div class="container py-5 text-center"><p>Nenhum serviço encontrado.</p></div>';
+        // Fallback caso não existam posts
+        echo '<div class="container py-5 text-center"><p class="alert alert-info">Nenhum serviço cadastrado até ao momento.</p></div>';
     endif;
     ?>
 
-</main><!-- End #main -->
+</main>
 
 <?php get_footer(); ?>
