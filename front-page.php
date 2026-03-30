@@ -47,8 +47,7 @@
 
             <div class="section-header">
                 <h2>Serviços</h2>
-                <p>Identificar as melhores soluções e atender cada demanda de forma personalizada são nossos
-                    diferenciais.</p>
+                <p>Especialistas em infraestrutura sob condições complexas: terraplenagem de larga escala, drenagem profunda e pavimentação industrial</p>
             </div>
 
             <div class="row gy-4">
@@ -86,9 +85,8 @@
         <div class="container">
 
             <div class="section-header">
-                <h2>Obras</h2>
-                <p>Elabora e viabiliza projetos adotando técnicas de engenharia e gerenciamento em todo o ciclo
-                    produtivo</p>
+                <h2>Projetos</h2>
+                <p>Viabilizamos o ciclo completo da engenharia, da regularização do solo à pavimentação final, com foco absoluto em segurança e precisão técnica</p>
             </div>
 
             <div class="portfolio-isotope" data-portfolio-filter="*" data-portfolio-layout="masonry"
@@ -136,64 +134,49 @@
     </section><!-- End Our Projects Section -->
 
     <!-- ======= Clientes Section ======= -->
-    <section id="clientes" class="projects section-bg">
+    <section id="clientes" class="projects section-bg" style="opacity: 1 !important; visibility: visible !important; padding: 50px 0;">
         <div class="container">
 
             <div class="section-header">
                 <h2>Clientes</h2>
-                <p>Atendemos pequenas, médias e grandes empresas com o mesmo padrão de excelência e preços super
-                    competitivos.</p>
+                <p>Atendemos pequenas, médias e grandes empresas com o mesmo padrão de excelência.</p>
             </div>
 
-            <div class="portfolio-isotope" data-portfolio-filter="*" data-portfolio-layout="masonry"
-                data-portfolio-sort="original-order">
+            <div class="row gy-4">
+                <?php
+                $args = [
+                    'post_type'      => 'cliente',
+                    'posts_per_page' => -1,
+                    'post_status'    => 'publish',
+                    'orderby'        => 'menu_order',
+                    'order'          => 'ASC'
+                ];
 
-                <div class="row gy-4 portfolio-container">
+                $clientes_query = new WP_Query($args);
 
-                    <div class="col-lg-4 col-md-6 portfolio-item">
-                        <div class="portfolio-content h-100">
-                            <img src="<?php echo get_template_directory_uri(); ?>/assets/img/clientes/clientes-01.jpg" class="img-fluid" alt="">
+                if ($clientes_query->have_posts()) :
+                    while ($clientes_query->have_posts()) : $clientes_query->the_post();
+                        $logo_id = get_post_thumbnail_id();
+                        $logo_url = wp_get_attachment_image_url($logo_id, 'full');
+                        
+                        if ($logo_url) : 
+                ?>
+                        <div class="col-lg-3 col-md-4 col-6">
+                            <div class="portfolio-content shadow-sm bg-white p-4 rounded d-flex align-items-center justify-content-center" 
+                                 style="min-height: 250px; opacity: 1 !important; visibility: visible !important; transition: all 0.3s ease;">
+                                
+                                <img src="<?php echo esc_url($logo_url); ?>" class="img-fluid" alt="<?php the_title_attribute(); ?>" >
+                                     
+                            </div>
                         </div>
-                    </div><!-- End Clientes Item -->
-
-                    <div class="col-lg-4 col-md-6 portfolio-item">
-                        <div class="portfolio-content h-100">
-                            <img src="<?php echo get_template_directory_uri(); ?>/assets/img/clientes/clientes-02.jpg" class="img-fluid" alt="">
-                        </div>
-                    </div><!-- End Clientes Item -->
-
-                    <div class="col-lg-4 col-md-6 portfolio-item">
-                        <div class="portfolio-content h-100">
-                            <img src="<?php echo get_template_directory_uri(); ?>/assets/img/clientes/clientes-03.jpg" class="img-fluid" alt="">
-                        </div>
-                    </div><!-- End Clientes Item -->
-
-                    <div class="col-lg-4 col-md-6 portfolio-item">
-                        <div class="portfolio-content h-100">
-                            <img src="<?php echo get_template_directory_uri(); ?>/assets/img/clientes/clientes-04.jpg" class="img-fluid" alt="">
-                        </div>
-                    </div><!-- End Clientes Item -->
-
-                    <div class="col-lg-4 col-md-6 portfolio-item">
-                        <div class="portfolio-content h-100">
-                            <img src="<?php echo get_template_directory_uri(); ?>/assets/img/clientes/clientes-05.jpg" class="img-fluid" alt="">
-                        </div>
-                    </div><!-- End Clientes Item -->
-
-                    <div class="col-lg-4 col-md-6 portfolio-item">
-                        <div class="portfolio-content h-100">
-                            <img src="<?php echo get_template_directory_uri(); ?>/assets/img/clientes/clientes-06.jpg" class="img-fluid" alt="">
-                        </div>
-                    </div><!-- End Clientes Item -->
-
-                    <div class="col-lg-4 col-md-6 portfolio-item">
-                        <div class="portfolio-content h-100">
-                            <img src="<?php echo get_template_directory_uri(); ?>/assets/img/clientes/clientes-07.jpg" class="img-fluid" alt="">
-                        </div>
-                    </div><!-- End Clientes Item -->
-
-                </div><!-- End Projects Container -->
-
+                <?php 
+                        endif;
+                    endwhile;
+                    wp_reset_postdata();
+                else :
+                    echo '<p class="text-center">Nenhum cliente encontrado.</p>';
+                endif;
+                ?>
             </div>
 
         </div>
