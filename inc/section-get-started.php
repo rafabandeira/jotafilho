@@ -84,10 +84,13 @@ $gs_valores_text = get_option('jf_gs_valores_text', "Os clientes são a nossa ra
                         </div>
                         <div class="col-md-12 text-center">
                             <div class="loading" style="display:none;">Enviando...</div>
-                            <div class="error-message" style="display:none; color:red; margin-bottom:15px;"></div>
-                            <div class="sent-message" style="display:none; color:green; margin-bottom:15px;">Sua
-                                mensagem foi enviada com sucesso!</div>
-                            <button type="submit" class="btn-enviar">Enviar mensagem</button>
+                            <div class="error-message"
+                                style="display:none; color:#fff; background:#df1529; padding:15px; margin-bottom:15px;">
+                            </div>
+                            <div class="sent-message"
+                                style="display:none; color:#fff; background:#059652; padding:15px; margin-bottom:15px;">
+                                Sua mensagem foi enviada com sucesso!</div>
+                            <button type="submit" class="btn-enviar-custom">Enviar mensagem</button>
                         </div>
                     </div>
                 </form>

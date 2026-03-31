@@ -70,41 +70,26 @@
 
 <script>
   jQuery(document).ready(function ($) {
-    // Usamos o ID correto do formulário que está na front-page
     $('.php-email-form-wp').on('submit', function (e) {
       e.preventDefault();
 
       var form = $(this);
-      var btn = form.find('button[type="submit"]');
-      var loading = form.find('.loading');
-      var errorMsg = form.find('.error-message');
-      var sentMsg = form.find('.sent-message');
+      var btn = form.find('.btn-enviar-custom');
 
-      // Reset visual
-      loading.show();
-      errorMsg.hide();
-      sentMsg.hide();
+      form.find('.loading').fadeIn();
+      form.find('.error-message').hide();
+      form.find('.sent-message').hide();
       btn.prop('disabled', true);
 
-      $.ajax({
-        url: form.attr('action'),
-        type: 'POST',
-        data: form.serialize(),
-        success: function (response) {
-          loading.hide();
-          if (response.success) {
-            sentMsg.text(response.data).fadeIn();
-            form[0].reset();
-          } else {
-            errorMsg.text(response.data || 'Erro desconhecido').fadeIn();
-          }
-          btn.prop('disabled', false);
-        },
-        error: function () {
-          loading.hide();
-          errorMsg.text('Erro ao processar a requisição. Verifique sua conexão.').fadeIn();
-          btn.prop('disabled', false);
+      $.post(form.attr('action'), form.serialize(), function (response) {
+        form.find('.loading').hide();
+        if (response.success) {
+          form.find('.sent-message').fadeIn();
+          form[0].reset();
+        } else {
+          form.find('.error-message').text(response.data).fadeIn();
         }
+        btn.prop('disabled', false);
       });
     });
   });
